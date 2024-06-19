@@ -6,27 +6,29 @@ from .utils import homo2inhomo, inhomo2homo, homography_residual, is_colinear_2d
 
 
 class FundamentalMatrixTransform(Transform):
+    p_size = 8
 
     def __init__(self) -> None:
         super().__init__()
-        self.model = FMT()
+        self.model = FMT(matrix=self.params)
 
-    def fit(self, src: np.ndarray, dst: np.ndarray):
+    def fit(self, data: np.ndarray):
         """x1 and x2: shape (N, 2) in-homogeneous representation of 2D points. Code adapted from"""
+        src, dst = data[:, :2], data[:, 2:]
         try:
             self.model.estimate(src=src, dst=dst)
             self.params = self.model.params
-            self.is_fitted = True
         except:
-            self.is_fitted = False
+            pass
 
-    def residuals(self, src: np.ndarray, dst: np.ndarray):
+    def residuals(self, data: np.ndarray):
         assert self.is_fitted, "This transform does not have parameters"
+        src, dst = data[:, :2], data[:, 2:]
         return self.model.residuals(src=src, dst=dst)
 
-    def is_degenerate(self, src: np.ndarray, dst: np.ndarray):
-        src = np.asarray(src)
-        dst = np.asarray(dst)
+    def is_degenerate(data: np.ndarray):
+        src, dst = data[:, :2], data[:, 2:]
+
         if src.shape != dst.shape:
             raise ValueError("src and dst shapes must be identical.")
         if src.shape[0] < 8:
@@ -34,8 +36,8 @@ class FundamentalMatrixTransform(Transform):
 
         # Center and normalize image points for better numerical stability.
         try:
-            src_matrix, src = _center_and_normalize_points(src)
-            dst_matrix, dst = _center_and_normalize_points(dst)
+            _, src = _center_and_normalize_points(src)
+            _, dst = _center_and_normalize_points(dst)
         except ZeroDivisionError:
             return True
 
