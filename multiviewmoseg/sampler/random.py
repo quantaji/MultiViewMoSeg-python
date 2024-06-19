@@ -1,6 +1,7 @@
 from .base import Sampler
 from ..transform.base import Transform
 import numpy as np
+import warnings
 
 
 class RandomSampler(Sampler):
@@ -50,7 +51,8 @@ class RandomSampler(Sampler):
                     break
 
             if is_degen:
-                assert False, "Cannot find a valid p-subset!"
+                warnings.warn("Cannot find a valid p-subset!")
+                continue
 
             # use the sampled data to fit a model
             hypo = transform()
