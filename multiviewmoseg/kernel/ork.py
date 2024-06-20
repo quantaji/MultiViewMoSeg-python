@@ -22,5 +22,6 @@ def compute_ordered_redisual_kernel(
     selected_hypo_mask_2 = (residual_2 < datawise_percentile_2.reshape(1, -1)).astype(float)
 
     K = selected_hypo_mask_1.T @ selected_hypo_mask_2
+    # NOTE: no normalization is applied against K
 
     return K
