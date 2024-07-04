@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def adapt_enn(A: np.ndarray, alpha: float = 0.5):
+def adapt_enn_sparsify(A: np.ndarray, alpha: float = 0.5):
     """
     Function to adaptively e-nn sparsify affinity matrix.
     A: affinity matrix, shape (N, N)

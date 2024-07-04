@@ -3,7 +3,7 @@ import numpy as np
 
 def compute_ordered_redisual_kernel(
     residual_1: np.ndarray,
-    residual_2: np.ndarray,
+    residual_2: np.ndarray = None,
     percentile: float = 0.1,
 ):
     """
@@ -12,6 +12,8 @@ def compute_ordered_redisual_kernel(
     return:
         K: of shape (num_data_1, num_data_2)
     """
+    if residual_2 is None:
+        residual_2 = residual_1
 
     assert residual_1.shape[0] == residual_2.shape[0]
 

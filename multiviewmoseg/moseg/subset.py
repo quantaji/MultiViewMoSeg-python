@@ -1,6 +1,7 @@
 from typing import List, Union
 
 import numpy as np
+from scipy.linalg import svd
 
 
 def compute_subset_loss_and_itermediate_variables(
@@ -67,13 +68,18 @@ def subset_eig(
 
     # Intialize Each Spectral Embedding
     for i in range(num_kernels):
+        print(i)
         K_i = kernels[i]  # (N, N)
-        D_i = np.diag(np.sum(K_i, axis=1))
+        D_i = np.sqrt(np.sum(K_i, axis=1, keepdims=True)) + 1e-8
 
-        L_i = np.eye(D_i.shape[0]) - (D_i**-0.5) @ K_i @ (D_i**-0.5)
+        L_i = np.eye(D_i.shape[0]) - K_i / D_i / D_i.T
         L.append(L_i)
 
-        U_tmp, _, _ = np.linalg.svd(L_i)
+        print("asdfasdfa")
+
+        # U_tmp, _, _ = np.linalg.svd(L_i)
+        print(L_i.shape)
+        U_tmp, _, _ = svd(L_i)
         U_i = U_tmp[:, -num_motion:]
         U.append(U_i)
 
@@ -92,6 +98,8 @@ def subset_eig(
     exitinfo = {"reason": "timeout"}
 
     for iteration in range(max_iter):
+
+        print(iteration)
 
         for i in range(num_kernels):
             D_i, vec_i = np.linalg.eigh(L_tilde[i])

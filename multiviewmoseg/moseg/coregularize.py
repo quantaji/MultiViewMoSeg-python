@@ -34,9 +34,9 @@ def coregularize_eig(
     # Intialize Each Spectral Embedding
     for i in range(num_kernels):
         K_i = kernels[i]  # (N, N)
-        D_i = np.diag(np.sum(K_i, axis=1))
+        D_i = np.sqrt(np.sum(K_i, axis=1, keepdims=True)) + 1e-8
 
-        L_i = np.eye(D_i.shape[0]) - (D_i**-0.5) @ K_i @ (D_i**-0.5)
+        L_i = np.eye(D_i.shape[0]) - K_i / D_i / D_i.T
         L.append(L_i)
 
         U_tmp, _, _ = np.linalg.svd(L_i)

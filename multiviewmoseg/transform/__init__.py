@@ -1,3 +1,3 @@
-from .affine import AffineTransform
-from .homography import HomographyTransform
-from .fundamental import FundamentalMatrixTransform
+from .affine import AffineTransform, MultiFrameAffineTransform
+from .fundamental import FundamentalMatrixTransform, MultiFrameFundamentalMatrixTransform
+from .homography import HomographyTransform, MultiFrameHomographyTransform

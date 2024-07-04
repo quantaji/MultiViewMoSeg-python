@@ -93,14 +93,14 @@ class MultiFrameFundamentalMatrixTransform(Transform):
 
         try:
             params = []
-            model = FundamentalMatrixTransform()
+            model = FMT()
 
             for i in range(self.n_frames - 1):
                 model.estimate(
                     src=data[:, i, :],
                     dst=data[:, i + 1, :],
                 )
-                params.append(self.model.params)
+                params.append(model.params)
 
             self.params = np.array(params)
 
